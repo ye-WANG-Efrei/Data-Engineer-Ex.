@@ -1,4 +1,5 @@
-##Download and Setup Kafka - Linux(AWS)   
+# Kafka with AWS
+## Download and Setup Kafka - Linux(AWS)   
 ### Setup JAVA enviroment - Kafka is a Java-based system
 1.  Install Java JDK version 11 
 2.  For AWS there is an open-souce App - `Amazon Corretto` 
@@ -38,13 +39,39 @@
    echo $PATH                         # show that indeed path into the account
    ```
    Maker sure you have the correct Kafka version and path right here.
-Stable in AWS and cloud environments ✅
 
-Fully compatible with Apache Kafka ✅
+### Lanch Kafka with Zookeeper  
+1. Start Zookeeper using the binaries
+   ```
+   zookeeper-server-start.sh  ~/kafka_2.13-3.0.0/config/zookeeper.properties
+   
+   # If you did indecate the PATH of zookeeper-server-start.sh, if not do the following
+   ~/kafka_2.13-3.0.0/bin/zookeeper-server-start.sh ~/kafka_2.13-3.0.0/config/zookeeper.properties
+   ```
+   This command does two things: it starts the Zookeeper server and indicate it where to find the properties file.
+   它是一个 属性文件（.properties）格式的文本配置文件，里面定义了 Zookeeper 启动时所需的各种关键参数。
+   ```
+   dataDir=/tmp/zookeeper              # 存储数据的目录
+   clientPort=2181                    # 客户端连接端口
+   maxClientCnxns=60                  # 最大客户端连接数
+   tickTime=2000                      # 心跳单位（ms）
+   initLimit=10                       # 集群初始化时的心跳周期数
+   syncLimit=5                        # 同步时的心跳容忍数
+   ```
+2. Start Kafka using the binaries in another process
+   ```
+   ~/kafka_2.13-3.0.0/bin/kafka-server-start.sh ~/kafka_2.13-3.0.0/config/server.properties
+   ```
+3. You could also change the zookeeper data storage in the properties file
+   ```
+   @zookeeper.properties
+   # the dircatory where the snapshot is stored.
+   dataDir = /temp/zookeeper
+   ```
+4. Change the Log file in server.properties file
+   ```
+   # A comma separated list of directories under which to store log files
+   log.dirs = /temp/kafka-logs
+   ```
 
-Therefore, many Kafka installation guides—especially those on AWS—recommend or use Corretto as the JDK runtime environment by default.
 
-Start Kafka using the binaries in another process
-
-Setup the $PATH environment variables for easy access to the Kafka binaries
-3. 
