@@ -7,9 +7,11 @@
      - Long-term supported ✅  
      - Therefore we use `Corretto` as the JDK runtime environment by default.
      - [ Amazon Corretto 11 Linux install page](https://docs.aws.amazon.com/corretto/latest/corretto-11-ug/linux-info.html)
-     - `wget -O- https://apt.corretto.aws/corretto.key | sudo apt-key add - `  
+     - `wget -O - https://apt.corretto.aws/corretto.key | sudo gpg --dearmor -o /usr/share/keyrings/corretto-keyring.gpg && \ `  
         `sudo add-apt-repository 'deb https://apt.corretto.aws stable main`  
-        `sudo apt-get update; sudo apt-get install -y java-11-amazon-corretto-jdk`   
+        `sudo apt-get update; sudo apt-get install -y java-11-amazon-corretto-jdk`  
+         which is going to enbale us to install Java 11 from the Amazon distribution 
+
 
 Stable in AWS and cloud environments ✅
 
