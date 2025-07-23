@@ -9,12 +9,23 @@
      - Therefore we use `Corretto` as the JDK runtime environment by default.
      - [ Amazon Corretto 11 Linux install page](https://docs.aws.amazon.com/corretto/latest/corretto-11-ug/linux-info.html)  
          ```
-          wget -O - https://apt.corretto.aws/corretto.key | sudo gpg --dearmor -o /usr/share/keyrings/corretto-keyring.gpg && \  
-          sudo add-apt-repository 'deb https://apt.corretto.aws stable main    
+         # grab the pb key from link, and save that in following path     
+          wget -O - https://apt.corretto.aws/corretto.key | sudo gpg --dearmor -o /usr/share/keyrings/corretto-keyring.gpg
+         
+         #将 Amazon Corretto 的软件源添加到你的系统中，以便可以通过 apt 命令直接安装它提供的软件包（比如 Corretto JDK）。  
+         #deb <网址> <发布版本名> <组件> 
+          sudo add-apt-repository deb https://apt.corretto.aws stable main
+         
+         # 如果没有add-apt-repository use the following code to update
           sudo apt-get update; sudo apt-get install -y java-11-amazon-corretto-jdk
          ```  
       which is going to enbale us to install Java 11 from the Amazon distribution
-  3. Verify whether or not Java is correctly installed  
+ 3.  Amazon Linux / CentOS / RHEL , they don't have `apt`, use `yum` or `dnf`.  
+     ```
+       sudo dnf install java-11-amazon-corretto  
+       ```
+
+ 4. Verify whether or not Java is correctly installed  
        ```
        java -version  
        ```
@@ -34,19 +45,37 @@
    In order to easily access the Kafka binaries, you can edit your PATH variable by adding the following line to your system run commands (for example `~/.zshrc` if you use zshrc or `~/.bashrc` for Bash ):
    ```
    nano ~/.bashrc                     # access to config file
-   PATH="$PATH:~/kafka_2.13-3.0.0/bin"
-   source ~/.bashrc                   # save the change
+   export PATH="$PATH:~/kafka_2.13-3.9.1/bin"
+   source ~/.bashrc                   # save the change forever
    echo $PATH                         # show that indeed path into the account
    ```
    Maker sure you have the correct Kafka version and path right here.
+4. ###### Remarque
+   如果 PATH 被你意外覆盖了（只包含了 Kafka 路径），你可能看到类似：
+   ```
+   /home/ec2-user/kafka_2.13-3.9.1/bin
+   ```
+   这样的话，系统就找不到 `dirname`、`java`、`yum`、甚至 `ls`、`sudo` 这些命令了。
+   如何正确恢复 PATH
+   先手动恢复一个最基本的 PATH 临时用：
+   ```
+   export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+   ```
+   然后再把 Kafka 的路径加上：
+   ```
+   which dirname
+   which kafka-server-start.sh
+   ```
+   
 
+   
 ### Lanch Kafka with Zookeeper  
 1. Start Zookeeper using the binaries
    ```
-   zookeeper-server-start.sh  ~/kafka_2.13-3.0.0/config/zookeeper.properties
+   zookeeper-server-start.sh  ~/kafka_2.13-3.9.1/config/zookeeper.properties
    
-   # If you did indecate the PATH of zookeeper-server-start.sh, if not do the following
-   ~/kafka_2.13-3.0.0/bin/zookeeper-server-start.sh ~/kafka_2.13-3.0.0/config/zookeeper.properties
+   # If you did indecate the PATH of zookeeper-server-start.sh, if not,do the following
+   ~/kafka_2.13-3.9.1/bin/zookeeper-server-start.sh ~/kafka_2.13-3.9.1/config/zookeeper.properties
    ```
    This command does two things: it starts the Zookeeper server and indicate it where to find the properties file.
    它是一个 属性文件（.properties）格式的文本配置文件，里面定义了 Zookeeper 启动时所需的各种关键参数。
@@ -60,7 +89,7 @@
    ```
 2. Start Kafka using the binaries in another process
    ```
-   ~/kafka_2.13-3.0.0/bin/kafka-server-start.sh ~/kafka_2.13-3.0.0/config/server.properties
+   ~/kafka_2.13-3.9.1/bin/kafka-server-start.sh ~/kafka_2.13-3.9.1/config/server.properties
    ```
 3. You could also change the zookeeper data storage in the properties file
    ```
@@ -73,5 +102,14 @@
    # A comma separated list of directories under which to store log files
    log.dirs = /temp/kafka-logs
    ```
-
-
+### Summary 
+1. Linux上用apt, 但是AWS上直接用yum.
+2. 正确的 .bashrc 设置应该是：
+   ```
+   export PATH="~/kafka_2.13-3.9.1/bin"    # ❌ 错！覆盖了系统路径
+   # 保持系统原有路径，并添加 Kafka 路径
+   export PATH="$PATH:$HOME/kafka_2.13-3.9.1/ sebin"
+   ```
+   只有`source ~/.bashrc`后才会永久保存，同时要写进`~/.bashrc`才会对所有process生效
+3. 如果不小心覆盖了`$PATH`,就没有办法使用`sudo`,`nano`,`ls`等命令  
+   [you can see there](#Remarque)
