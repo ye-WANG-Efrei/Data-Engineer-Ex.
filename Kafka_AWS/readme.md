@@ -114,7 +114,7 @@
 3. 如果不小心覆盖了`$PATH`,就没有办法使用`sudo`,`nano`,`ls`等命令  
    [you can see there](#Remarque)
 4. #### How can I create a new EC2 instance using my previous setup or environment?
-   We can create an Amazon Machine Image (AMI) as what we do on docker
+   We can create an Amazon Machine Image (AMI) as what we do on docker  
    'Actions' → 'Image and templates' → 'Create image'
 
 ## Start Kafka in KRaft(wihtout Zookeeper) - Linux(AWS)    
