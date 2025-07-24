@@ -1,5 +1,5 @@
 # Kafka with AWS
-## Download and Setup Kafka - Linux(AWS)   
+## Download and Setup kafka_2.13-3.9.1 with Zookeeper - Linux(AWS)   
 ### Setup JAVA enviroment - Kafka is a Java-based system
 1.  Install Java JDK version 11 
 2.  For AWS there is an open-souce App - `Amazon Corretto` 
@@ -38,8 +38,8 @@
 1. Download the latest version of Apache Kafka from https://kafka.apache.org/downloads under Binary downloads. （Binary .tgz文件 免编译，不用构建Maven）
 2. Extract the contents to a directory of your choice
    ```
-   tar xzf kafka_2.13-3.0.0.tgz  
-   mv kafka_2.13-3.0.0 ~
+   tar xzf kafka_2.13-3.9.1.tgz  
+   mv kafka_2.13-3.9.1 ~
    ```
 3. Setup the $PATH environment varibale, which could let you input the more concise commend instead of the whole path
    In order to easily access the Kafka binaries, you can edit your PATH variable by adding the following line to your system run commands (for example `~/.zshrc` if you use zshrc or `~/.bashrc` for Bash ):
@@ -102,7 +102,7 @@
    # A comma separated list of directories under which to store log files
    log.dirs = /temp/kafka-logs
    ```
-### Summary 
+### Summary & Impove
 1. Linux上用apt, 但是AWS上直接用yum.
 2. 正确的 .bashrc 设置应该是：
    ```
@@ -113,3 +113,16 @@
    只有`source ~/.bashrc`后才会永久保存，同时要写进`~/.bashrc`才会对所有process生效
 3. 如果不小心覆盖了`$PATH`,就没有办法使用`sudo`,`nano`,`ls`等命令  
    [you can see there](#Remarque)
+4. #### How can I create a new EC2 instance using my previous setup or environment?
+   We can create an Amazon Machine Image (AMI) as what we do on docker
+   'Actions' → 'Image and templates' → 'Create image'
+
+## Start Kafka in KRaft(wihtout Zookeeper) - Linux(AWS)    
+1. why we DEPRECATE(Obsolète) Zookeeper?
+   a. prevent 'Split-Brain': Based on the architecture of Zookeeper, the `controller` is selected by Zookeeper,
+   It is possible there may be multiple `controller` identifying as `Master` simultaneously,
+   **leading to data inconsistency.**
+   b. ZooKeeper has ALL configuration of Kafka, However,Due to ZooKeeper's limited support for encryption mechanisms such as TLS（Transport Layer Security） and SASL（Simple Authentication and Security Layer）, **it can become a potential attack vector, even when Kafka is well secured.**
+2.  
+   
+   
