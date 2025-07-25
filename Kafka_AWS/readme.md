@@ -144,4 +144,4 @@
      ```  
      this will format the directory that is in the `log.dirs` in the `config/kraft/server.properties` file by default `/temp/kraft-combined-logs`)
   
-## [Kafka CLI]() 
+## [Kafka CLI](https://github.com/ye-WANG-Efrei/Data-Engineer-Ex./tree/main/Kafka_AWS) 
