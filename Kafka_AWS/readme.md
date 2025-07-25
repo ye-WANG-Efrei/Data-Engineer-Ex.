@@ -140,7 +140,7 @@
      ```
    - Next,format your storage directory(replace <uuid> by your uuid obtained above)
      ```
-     kafka-storage.sh format -t <uuid> -c ~/kafka_2.13-3.0.0.0/config/kraft/sesrver.properties
+     kafka-storage.sh format -t <uuid> -c ~/kafka_2.13-3.0.0.0/config/kraft/server.properties
      ```  
      this will format the directory that is in the `log.dirs` in the `config/kraft/server.properties` file by default `/temp/kraft-combined-logs`)
 6. Do not forget to change all infoto be set in `server.properties`
