@@ -118,11 +118,28 @@
    'Actions' → 'Image and templates' → 'Create image'
 
 ## Start Kafka in KRaft(wihtout Zookeeper) - Linux(AWS)    
-1. why we DEPRECATE(Obsolète) Zookeeper?
-   a. prevent 'Split-Brain': Based on the architecture of Zookeeper, the `controller` is selected by Zookeeper,
-   It is possible there may be multiple `controller` identifying as `Master` simultaneously,
-   **leading to data inconsistency.**
+1. why we DEPRECATE(Obsolète) Zookeeper?  
+   a. prevent 'Split-Brain': Based on the architecture of Zookeeper, the `controller` is selected by Zookeeper.
+   It is possible there may be multiple `controller` identifying as `Master` simultaneously, **leading to data inconsistency.**
+
    b. ZooKeeper has ALL configuration of Kafka, However,Due to ZooKeeper's limited support for encryption mechanisms such as TLS（Transport Layer Security） and SASL（Simple Authentication and Security Layer）, **it can become a potential attack vector, even when Kafka is well secured.**
-2.  
    
-   
+2. MUST: Grenerate a cluster ID and Format the storage using `kafak-storage.sh` to initialize the **metadata directory**; otherwise, Kafka will not be able to start."  
+    > WHY?
+    >When using KRaft, Kafka itself stores all metadata instead of relying on ZooKeeper. This means:  
+    > 1. All topics, broker IDs, configurations, and ISR (in-sync replica) states are written into an internal metadata log.  
+    > 2. Kafka must be aware of which cluster the metadata belongs to.  
+    > 3. Therefore, 、 must manually initialize the metadata directory and assign a unique Cluster ID before starting the broker.
+
+3. Installing Java JDK 11
+4. Download Apache Kafka from https://kafka.apache.org/downloads under Binary Downloads
+5. Start Kafka
+   - the first step is to genertate a new ID for the cluster  
+     ```
+     kafka-storage.sh random-uuid
+     ```
+   - Next,format your storage directory(replace <uuid> by your uuid obtained above)
+     ```
+     kafka-storage.sh format -t <uuid> -c ~/kafka_2.13-3.0.0.0/config/kraft/sesrver.properties
+     ```  
+     this will format the directory that is in the `log.dirs` in the `config/kraft/server.properties` file by default `/temp/kraft-combined-logs`)
